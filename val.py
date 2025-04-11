@@ -5,14 +5,22 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    # Get the first 150 Pokémon from the API
+    # Fetch weapon data from Valorant API
     response = requests.get("https://valorant-api.com/v1/weapons")
     data = response.json()
-    weapons_list = data['results']
+    weapons_list = data['data']  # should be 'data', not 'results'
 
     weapons = []
 
     for weapon in weapons_list:
-        url = weapon['url']
-        parts = url.strip("/").split("/")
-        id = parts[-1]
+        weapon_id = weapon['uuid']  # Unique ID
+        name = weapon['displayName']
+        icon = weapon['displayIcon']
+
+        weapons.append({
+            'id': weapon_id,
+            'name': name,
+            'icon': icon
+        })
+
+    return render_template("index.html", weapons=weapons)
