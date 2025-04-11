@@ -8,14 +8,14 @@ def index():
     # Fetch weapon data from Valorant API
     response = requests.get("https://valorant-api.com/v1/weapons")
     data = response.json()
-    weapons_list = data['data']  # should be 'data', not 'results'
+    weapons_list = data['data']  # This is correct
 
     weapons = []
 
     for weapon in weapons_list:
-        weapon_id = weapon['uuid']  # Unique ID
-        name = weapon['displayName']
-        icon = weapon['displayIcon']
+        weapon_id = weapon.get('uuid')
+        name = weapon.get('displayName', 'Unknown Weapon')
+        icon = weapon.get('displayIcon')
 
         weapons.append({
             'id': weapon_id,
