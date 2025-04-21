@@ -8,7 +8,7 @@ def index():
     # Fetch weapon data from Valorant API
     response = requests.get("https://valorant-api.com/v1/weapons")
     data = response.json()
-    weapons_list = data['data']  # This is correct
+    weapons_list = data['data']  
 
     weapons = []
 
@@ -24,3 +24,12 @@ def index():
         })
 
     return render_template("index.html", weapons=weapons)
+
+@app.route("/weapon/<weapon_id>")
+def weapon_detail(weapon_id):
+    response = requests.get(f"https://valorant-api.com/v1/weapons/{weapon_id}")
+    if response.status_code != 200:
+        return "Weapon not found", 404
+    weapon = response.json().get('data', {})
+    return render_template("weapon_detail.html", weapon=weapon)
+app.run(debug=True)
