@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ weapon.displayName or 'Unknown Weapon' }}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='poop.css') }}">
+</head>
+<body>
+    <h1>{{ weapon.displayName or 'Unknown Weapon' }}</h1>
+
+    {% if weapon.displayIcon %}
+        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}">
+    {% else %}
+        <p>No image available</p>
+    {% endif %}
+
+    <p>Category: {{ weapon.category or 'N/A' }}</p>
+
+    {% if weapon.shopData %}
+        <p>Cost: ${{ weapon.shopData.cost }}</p>
+    {% else %}
+        <p>Cost: N/A</p>
+    {% endif %}
+    <h2>How many would you like to buy?</h2>
+    <form action="/calculate_cost" method="POST">
+        <input type="number" name="quantity" min="1" value="1" required>
+
+        <input type="hidden" name="weapon_id" value="{{ weapon.uuid }}">
+        <input type="hidden" name="weapon_cost" value="{{ weapon.shopData.cost if weapon.shopData else 0 }}">
+        <input type="hidden" name="weapon_name" value="{{ weapon.displayName }}">
+
+        <button type="submit">Calculate Total Cost</button>
+    </form>
+
+    <a href="/">Back to Weapon List</a>
+</body>
+</html>

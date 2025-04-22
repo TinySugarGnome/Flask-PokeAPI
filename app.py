@@ -1,4 +1,4 @@
-""" from flask import Flask, render_template
+from flask import Flask, render_template
 import requests
 
 app = Flask(__name__)
@@ -63,4 +63,3 @@ def pokemon_detail(id):
 
 if __name__ == '__main__':
     app.run(debug=True)
- """

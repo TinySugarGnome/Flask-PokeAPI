@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculated Cost</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='m.css') }}">
+</head>
+<body>
+    <h1>Total Cost for {{ weapon_name }}</h1>
+    <p>You are buying {{ quantity }} units of {{ weapon_name }}.</p>
+    <p>Total cost: ${{ total_cost }}</p>
+
+    <a href="/">Back to Weapon List</a>
+</body>
+</html>

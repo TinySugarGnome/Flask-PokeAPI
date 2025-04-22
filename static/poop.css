@@ -1,0 +1,62 @@
+/* poop.css */
+body {
+    font-size: 24px; /* Increase font size */
+    line-height: 1.6; /* Adjust line height for readability */
+    font-family: Arial, sans-serif; /* Use a clean sans-serif font */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    flex-direction: column; /* Align items vertically from top to bottom */
+    height: 100vh; /* Full viewport height */
+}
+
+h1 {
+    font-size: 48px; /* Make the title larger */
+    margin-bottom: 20px; /* Space below the title */
+}
+
+h2 {
+    font-size: 36px; /* Make the subheading larger */
+    margin-bottom: 20px; /* Space below the subheading */
+}
+
+img {
+    width: 400px; /* Make the image bigger */
+    height: auto; /* Keep the aspect ratio */
+    margin: 20px 0; /* Space around the image */
+}
+
+p {
+    font-size: 28px; /* Larger text for paragraphs */
+    margin: 10px 0; /* Add space between paragraphs */
+}
+
+input[type="number"] {
+    font-size: 32px; /* Larger text inside the input */
+    padding: 15px;
+    margin-top: 20px;
+    width: 150px; /* Make input width a bit larger */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button {
+    font-size: 32px; /* Make button text larger */
+    padding: 15px 30px; /* Add padding to button */
+    margin-top: 20px; /* Add space above button */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+a {
+    font-size: 28px; /* Larger font for the back link */
+    display: block;
+    margin-top: 20px; /* Add space above the link */
+    text-decoration: none; /* Remove underline */
+    color: black; /* Color the link black for simplicity */
+}
