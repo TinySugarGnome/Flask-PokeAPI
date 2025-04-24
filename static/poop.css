@@ -2,7 +2,6 @@
 body {
     font-size: 24px; /* Increase font size */
     line-height: 1.6; /* Adjust line height for readability */
-    font-family: Arial, sans-serif; /* Use a clean sans-serif font */
     margin: 0;
     padding: 0;
     display: flex;
