@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>{{ weapon.displayName or 'Unknown Weapon' }}</title>
@@ -19,9 +20,10 @@
             }
         }
 
-        /* Hover effect to stop spinning */
-        .spin:hover {
-            animation-play-state: paused;  /* Pause when hovered */
+        /* Draggable image style */
+        .draggable {
+            position: absolute;  /* Ensure it can move freely on the page */
+            cursor: move;  /* Show the move cursor when hovering over the image */
         }
     </style>
 </head>
@@ -29,8 +31,8 @@
     <h1>{{ weapon.displayName or 'Unknown Weapon' }}</h1>
 
     {% if weapon.displayIcon %}
-        <!-- Add the 'spin' class to the image for spinning effect -->
-        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}" class="spin">
+        <!-- Add 'spin' class for spinning and 'draggable' class for dragging -->
+        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}" class="spin draggable" id="weaponImage">
     {% else %}
         <p>No image available</p>
     {% endif %}
@@ -56,5 +58,40 @@
     </form>
 
     <a href="/">Back to Weapon List</a>
+
+    <script>
+        // JavaScript for making the image draggable
+        const image = document.getElementById('weaponImage');
+
+        // Dragging logic
+        let isDragging = false;
+
+        // Mouse down event to start dragging
+        image.addEventListener('mousedown', function (event) {
+            isDragging = true;
+            const offsetX = event.clientX - image.getBoundingClientRect().left;
+            const offsetY = event.clientY - image.getBoundingClientRect().top;
+
+            // Mouse move event to drag
+            function dragMove(event) {
+                if (isDragging) {
+                    const x = event.clientX - offsetX;
+                    const y = event.clientY - offsetY;
+                    image.style.left = x + 'px';
+                    image.style.top = y + 'px';
+                }
+            }
+
+            // Mouse up event to stop dragging
+            function stopDrag() {
+                isDragging = false;
+                document.removeEventListener('mousemove', dragMove);
+                document.removeEventListener('mouseup', stopDrag);
+            }
+
+            document.addEventListener('mousemove', dragMove);
+            document.addEventListener('mouseup', stopDrag);
+        });
+    </script>
 </body>
 </html>
