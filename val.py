@@ -67,6 +67,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
+    sort_by = request.args.get("sort_by", "cost")
+
     response = requests.get("https://valorant-api.com/v1/weapons")
     data = response.json()
     weapons_list = data['data']
@@ -79,19 +81,27 @@ def index():
         weapon_id = weapon.get('uuid')
         name = weapon.get('displayName', 'Unknown Weapon')
         icon = weapon.get('displayIcon')
+        stats = weapon.get('weaponStats', {})
+        fire_rate = stats.get('fireRate', 0) if stats else 0
+        accuracy = stats.get('firstBulletAccuracy', 0) if stats else 0
         cost = weapon.get('shopData', {})
-        if cost:
-            cost = cost.get('cost', 0)
-        else:
-            cost = 0
+        cost = cost.get('cost', 0) if cost else 0
 
         weapons.append({
             'id': weapon_id,
             'name': name,
             'icon': icon,
-            'weapon_cost': cost
+            'weapon_cost': cost,
+            'fire_rate': fire_rate,
+            'accuracy': accuracy
         })
-    weapons.sort(key=lambda w: w['weapon_cost'])
+
+    if sort_by == "fire_rate":
+        weapons.sort(key=lambda w: w.get('fire_rate', 0), reverse=True)
+    elif sort_by == "accuracy":
+        weapons.sort(key=lambda w: w.get('accuracy', 0), reverse=True)
+    else:
+        weapons.sort(key=lambda w: w.get('weapon_cost', 0))
 
     return render_template("index.html", weapons=weapons)
 

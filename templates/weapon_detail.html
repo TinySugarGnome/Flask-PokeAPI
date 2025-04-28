@@ -1,14 +1,36 @@
-<!DOCTYPE html>
 <html>
 <head>
     <title>{{ weapon.displayName or 'Unknown Weapon' }}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='poop.css') }}">
+
+    <style>
+        /* Spin animation */
+        .spin {
+            animation: spin 3s linear infinite;  /* Spin 3 seconds infinitely */
+        }
+
+        /* Define the keyframes for the spin animation */
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);  /* Start from 0 degrees */
+            }
+            to {
+                transform: rotate(360deg);  /* End at 360 degrees */
+            }
+        }
+
+        /* Hover effect to stop spinning */
+        .spin:hover {
+            animation-play-state: paused;  /* Pause when hovered */
+        }
+    </style>
 </head>
 <body>
     <h1>{{ weapon.displayName or 'Unknown Weapon' }}</h1>
 
     {% if weapon.displayIcon %}
-        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}">
+        <!-- Add the 'spin' class to the image for spinning effect -->
+        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}" class="spin">
     {% else %}
         <p>No image available</p>
     {% endif %}
@@ -20,12 +42,14 @@
     {% else %}
         <p>Cost: N/A</p>
     {% endif %}
+    
     <h2>How many would you like to buy?</h2>
     <form action="/calculate_cost" method="POST">
         <input type="number" name="quantity" min="1" value="1" required>
 
+        <!-- Hidden fields with safer access to data -->
         <input type="hidden" name="weapon_id" value="{{ weapon.uuid }}">
-        <input type="hidden" name="weapon_cost" value="{{ weapon.shopData.cost if weapon.shopData else 0 }}">
+        <input type="hidden" name="weapon_cost" value="{{ weapon.shopData.get('cost', 0) }}">
         <input type="hidden" name="weapon_name" value="{{ weapon.displayName }}">
 
         <button type="submit">Calculate Total Cost</button>
