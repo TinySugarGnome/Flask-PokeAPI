@@ -5,25 +5,44 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='poop.css') }}">
 
     <style>
-        /* Spin animation */
         .spin {
-            animation: spin 3s linear infinite;  /* Spin 3 seconds infinitely */
+            animation: spin 3s linear infinite;
         }
 
-        /* Define the keyframes for the spin animation */
         @keyframes spin {
             from {
-                transform: rotate(0deg);  /* Start from 0 degrees */
+                transform: rotate(0deg);
             }
             to {
-                transform: rotate(360deg);  /* End at 360 degrees */
+                transform: rotate(360deg);
             }
         }
 
-        /* Draggable image style */
         .draggable {
-            position: absolute;  /* Ensure it can move freely on the page */
-            cursor: move;  /* Show the move cursor when hovering over the image */
+            position: absolute;
+            cursor: move;
+            width: 20%;
+            height: auto;
+        }
+
+        .top-left {
+            top: 0;
+            left: 0;
+        }
+
+        .top-right {
+            top: 0;
+            right: 0;
+        }
+
+        .bottom-left {
+            bottom: 0;
+            left: 0;
+        }
+
+        .bottom-right {
+            bottom: 0;
+            right: 0;
         }
     </style>
 </head>
@@ -31,8 +50,10 @@
     <h1>{{ weapon.displayName or 'Unknown Weapon' }}</h1>
 
     {% if weapon.displayIcon %}
-        <!-- Add 'spin' class for spinning and 'draggable' class for dragging -->
-        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}" class="spin draggable" id="weaponImage">
+        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}" class="spin draggable top-left">
+        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}" class="spin draggable top-right">
+        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}" class="spin draggable bottom-left">
+        <img src="{{ weapon.displayIcon }}" alt="{{ weapon.displayName }}" class="spin draggable bottom-right">
     {% else %}
         <p>No image available</p>
     {% endif %}
@@ -44,14 +65,17 @@
     {% else %}
         <p>Cost: N/A</p>
     {% endif %}
-    
+
     <h2>How many would you like to buy?</h2>
     <form action="/calculate_cost" method="POST">
         <input type="number" name="quantity" min="1" value="1" required>
 
-        <!-- Hidden fields with safer access to data -->
         <input type="hidden" name="weapon_id" value="{{ weapon.uuid }}">
-        <input type="hidden" name="weapon_cost" value="{{ weapon.shopData.get('cost', 0) }}">
+        {% if weapon.shopData %}
+            <input type="hidden" name="weapon_cost" value="{{ weapon.shopData.get('cost', 0) }}">
+        {% else %}
+            <input type="hidden" name="weapon_cost" value="0">
+        {% endif %}
         <input type="hidden" name="weapon_name" value="{{ weapon.displayName }}">
 
         <button type="submit">Calculate Total Cost</button>
@@ -60,37 +84,32 @@
     <a href="/">Back to Weapon List</a>
 
     <script>
-        // JavaScript for making the image draggable
-        const image = document.getElementById('weaponImage');
+        document.querySelectorAll('.draggable').forEach(image => {
+            let isDragging = false;
 
-        // Dragging logic
-        let isDragging = false;
+            image.addEventListener('mousedown', function (event) {
+                isDragging = true;
+                const offsetX = event.clientX - image.getBoundingClientRect().left;
+                const offsetY = event.clientY - image.getBoundingClientRect().top;
 
-        // Mouse down event to start dragging
-        image.addEventListener('mousedown', function (event) {
-            isDragging = true;
-            const offsetX = event.clientX - image.getBoundingClientRect().left;
-            const offsetY = event.clientY - image.getBoundingClientRect().top;
-
-            // Mouse move event to drag
-            function dragMove(event) {
-                if (isDragging) {
-                    const x = event.clientX - offsetX;
-                    const y = event.clientY - offsetY;
-                    image.style.left = x + 'px';
-                    image.style.top = y + 'px';
+                function dragMove(event) {
+                    if (isDragging) {
+                        const x = event.clientX - offsetX;
+                        const y = event.clientY - offsetY;
+                        image.style.left = x + 'px';
+                        image.style.top = y + 'px';
+                    }
                 }
-            }
 
-            // Mouse up event to stop dragging
-            function stopDrag() {
-                isDragging = false;
-                document.removeEventListener('mousemove', dragMove);
-                document.removeEventListener('mouseup', stopDrag);
-            }
+                function stopDrag() {
+                    isDragging = false;
+                    document.removeEventListener('mousemove', dragMove);
+                    document.removeEventListener('mouseup', stopDrag);
+                }
 
-            document.addEventListener('mousemove', dragMove);
-            document.addEventListener('mouseup', stopDrag);
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('mouseup', stopDrag);
+            });
         });
     </script>
 </body>
